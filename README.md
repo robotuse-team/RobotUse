@@ -47,7 +47,7 @@ Review the [dependency and asset licenses](DEPENDENCIES.md#dependency-and-asset-
 Contact-GraspNet and some RoboLab assets have noncommercial restrictions.
 
 ```bash
-git clone --recurse-submodules https://github.com/injun-baek/RobotUse.git
+git clone --recurse-submodules https://github.com/robotuse-team/RobotUse.git
 cd RobotUse
 scripts/setup/sources.sh
 ```

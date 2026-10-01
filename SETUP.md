@@ -18,7 +18,7 @@ sudo apt-get install -y python3 python3-pip ca-certificates git git-lfs curl ffm
 python3 -m pip install --user uv==0.12.17
 export PATH="$HOME/.local/bin:$PATH"
 
-git clone --recurse-submodules https://github.com/injun-baek/RobotUse.git
+git clone --recurse-submodules https://github.com/robotuse-team/RobotUse.git
 cd RobotUse
 scripts/setup/sources.sh
 ```

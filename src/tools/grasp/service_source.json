@@ -1,7 +1,7 @@
 {
   "kind": "Immutable source snapshot",
   "snapshot_path": "src/tools/grasp/third_party/capx_service",
-  "snapshot_url": "https://github.com/injun-baek/RobotUse/tree/main/src/tools/grasp/third_party/capx_service",
+  "snapshot_url": "https://github.com/robotuse-team/RobotUse/tree/main/src/tools/grasp/third_party/capx_service",
   "verification": "python3 scripts/check/setup.py --sources-only",
   "public_upstream": {
     "repository": "https://github.com/Max-Fu/CaP-X",
@@ -13,7 +13,7 @@
     {
       "path": "LICENSE",
       "sha256": "ad82ce2e6eb6e594af189655ae2f1592d0c91649d2745ad715c65850126cc6cc",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/LICENSE",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/LICENSE",
       "upstream_path": "LICENSE",
       "upstream_url": "https://github.com/Max-Fu/CaP-X/blob/823fcc5dd3e565b45b414f5785668cf32cba13b4/LICENSE",
       "upstream_sha256": "ad82ce2e6eb6e594af189655ae2f1592d0c91649d2745ad715c65850126cc6cc",
@@ -22,7 +22,7 @@
     {
       "path": "capx/__init__.py",
       "sha256": "273756cc97c7cd019dcbe4ec7b4dd7afde156d578245fc312910804bbfc4e6a4",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/__init__.py",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/__init__.py",
       "upstream_path": "capx/__init__.py",
       "upstream_url": "https://github.com/Max-Fu/CaP-X/blob/823fcc5dd3e565b45b414f5785668cf32cba13b4/capx/__init__.py",
       "upstream_sha256": "273756cc97c7cd019dcbe4ec7b4dd7afde156d578245fc312910804bbfc4e6a4",
@@ -31,7 +31,7 @@
     {
       "path": "capx/serving/__init__.py",
       "sha256": "7846189315f91f3f70a1754e049d87dbf090a048a1d2f1fa9d1b77b07d99f2ff",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/serving/__init__.py",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/serving/__init__.py",
       "upstream_path": "capx/serving/__init__.py",
       "upstream_url": "https://github.com/Max-Fu/CaP-X/blob/823fcc5dd3e565b45b414f5785668cf32cba13b4/capx/serving/__init__.py",
       "upstream_sha256": "7846189315f91f3f70a1754e049d87dbf090a048a1d2f1fa9d1b77b07d99f2ff",
@@ -40,7 +40,7 @@
     {
       "path": "capx/serving/launch_contact_graspnet_server.py",
       "sha256": "3843026a976f051e1a58f0689a810829f5d2078307673ce46a77efa8965674ec",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/serving/launch_contact_graspnet_server.py",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/serving/launch_contact_graspnet_server.py",
       "upstream_path": "capx/serving/launch_contact_graspnet_server.py",
       "upstream_url": "https://github.com/Max-Fu/CaP-X/blob/823fcc5dd3e565b45b414f5785668cf32cba13b4/capx/serving/launch_contact_graspnet_server.py",
       "upstream_sha256": "48ca8a1c49f62c2554eaa325fa37d4792c811248eec388004a09b989d65af93f",
@@ -53,7 +53,7 @@
     {
       "path": "capx/utils/__init__.py",
       "sha256": "2480e392b5592364e44cd3333c2e86510e8a94acbc89b1df18d9dd53f0522ca3",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/utils/__init__.py",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/utils/__init__.py",
       "upstream_path": "capx/utils/__init__.py",
       "upstream_url": "https://github.com/Max-Fu/CaP-X/blob/823fcc5dd3e565b45b414f5785668cf32cba13b4/capx/utils/__init__.py",
       "upstream_sha256": "2480e392b5592364e44cd3333c2e86510e8a94acbc89b1df18d9dd53f0522ca3",
@@ -62,7 +62,7 @@
     {
       "path": "capx/utils/graspnet_utils.py",
       "sha256": "84750af9416925113e88ac82697e63bed7f89d4ae215e6d0675bf5db58091fec",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/utils/graspnet_utils.py",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/grasp/third_party/capx_service/capx/utils/graspnet_utils.py",
       "upstream_path": "capx/utils/graspnet_utils.py",
       "upstream_url": "https://github.com/Max-Fu/CaP-X/blob/823fcc5dd3e565b45b414f5785668cf32cba13b4/capx/utils/graspnet_utils.py",
       "upstream_sha256": "84750af9416925113e88ac82697e63bed7f89d4ae215e6d0675bf5db58091fec",

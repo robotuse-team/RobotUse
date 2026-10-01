@@ -1,7 +1,7 @@
 {
   "kind": "Immutable source snapshot",
   "snapshot_path": "src/tools/curobo/third_party/open_robot_skills",
-  "snapshot_url": "https://github.com/injun-baek/RobotUse/tree/main/src/tools/curobo/third_party/open_robot_skills",
+  "snapshot_url": "https://github.com/robotuse-team/RobotUse/tree/main/src/tools/curobo/third_party/open_robot_skills",
   "verification": "python3 scripts/check/setup.py --sources-only",
   "public_upstream": {
     "repository": "https://github.com/graph-robots/open-robot-skills",
@@ -13,7 +13,7 @@
     {
       "path": "LICENSE",
       "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/curobo/third_party/open_robot_skills/LICENSE",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/curobo/third_party/open_robot_skills/LICENSE",
       "upstream_path": "LICENSE",
       "upstream_url": "https://github.com/graph-robots/open-robot-skills/blob/925d78eaf4873c3130c79b9b8f21971ec4e8b887/LICENSE",
       "upstream_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
@@ -22,7 +22,7 @@
     {
       "path": "tools/curobo/_curobo_impl.py",
       "sha256": "5df0592591c6367105d18da24919dec181720e34801001bf50e9cf2c9eb30609",
-      "shipped_url": "https://github.com/injun-baek/RobotUse/blob/main/src/tools/curobo/third_party/open_robot_skills/tools/curobo/_curobo_impl.py",
+      "shipped_url": "https://github.com/robotuse-team/RobotUse/blob/main/src/tools/curobo/third_party/open_robot_skills/tools/curobo/_curobo_impl.py",
       "upstream_path": "tools/curobo/_curobo_impl.py",
       "upstream_url": "https://github.com/graph-robots/open-robot-skills/blob/925d78eaf4873c3130c79b9b8f21971ec4e8b887/tools/curobo/_curobo_impl.py",
       "upstream_sha256": "ac22fcd7a081ea186f6d7ab7a10c877bd4771e960745cd9e4022d550f2502450",
