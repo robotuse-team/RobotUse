@@ -27,6 +27,8 @@
 
 </div>
 
+---
+
 <p align="center"><strong>Task:</strong> Put the small red yogurt in the red bowl.</p>
 
 <p align="center">
@@ -34,6 +36,8 @@
 </p>
 
 <p align="center"><em>2× playback. ORS = Open Robot Skills.</em></p>
+
+---
 
 **RobotUse** is a robot agent harness that lets language-model agents specify and
 revise physical actions through visual target selection, grasp selection, and
