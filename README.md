@@ -16,9 +16,8 @@
 <p><sup>*</sup> Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup> Corresponding author</p>
 
 <p>
-  <img src="docs/media/arxiv-button.svg" alt="arXiv — coming soon" height="34">
-  &nbsp;
-  <img src="docs/media/project-page-button.svg" alt="Project Page — coming soon" height="34">
+  <img src="https://img.shields.io/badge/arXiv-RobotUse-red" alt="arXiv — coming soon" title="Coming soon">
+  <img src="https://img.shields.io/badge/Project_Page-RobotUse-green" alt="Project Page — coming soon" title="Coming soon">
 </p>
 
 </div>
