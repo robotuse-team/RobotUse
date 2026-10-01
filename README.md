@@ -25,6 +25,14 @@
 
 </div>
 
+<p align="center"><strong>Task:</strong> Put the small red yogurt in the red bowl.</p>
+
+<p align="center">
+  <img src="assets/yogurt-in-bowl-comparison.gif" alt="Yogurt in bowl: Ours, CaP-X, and GaP (ORS), shown side by side at 2× speed. Completed clips hold their final frame and show Success or Failure." width="100%">
+</p>
+
+<p align="center"><em>2× playback. ORS = Open Robot Skills.</em></p>
+
 **RobotUse** is a robot agent harness that lets language-model agents specify and
 revise physical actions through visual target selection, grasp selection, and
 pose editing. Subagents keep detailed interactions in local contexts and return
