@@ -4,16 +4,16 @@
 <h3>Allocating Computation, Context, and Decisions</h3>
 
 <p>
-  <a href="https://junhoo.me/">Junhoo Lee</a><sup>1,*</sup> &middot;
-  <a href="https://injun-baek.github.io/">Injun Baek</a><sup>1,*</sup> &middot;
-  Seungyeon Kim<sup>1</sup> &middot;
-  Suhyun Jeon<sup>2</sup><br>
-  Minkyu Kim<sup>1</sup> &middot;
-  Baekseung Kim<sup>1</sup> &middot;
-  Nojun Kwak<sup>1,&dagger;</sup>
+  <a href="https://junhoo.me/">Junhoo Lee</a><sup>*</sup> &middot;
+  <a href="https://injun-baek.github.io/">Injun Baek</a><sup>*</sup> &middot;
+  Seungyeon Kim &middot;
+  Suhyun Jeon<br>
+  Minkyu Kim &middot;
+  Baekseung Kim &middot;
+  Nojun Kwak<sup>&dagger;</sup>
 </p>
 
-<p><sup>1</sup> Seoul National University (SNU) &nbsp;&nbsp; <sup>2</sup> KAIST</p>
+<p>Seoul National University (SNU)</p>
 
 <p><sup>*</sup> Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup> Corresponding author</p>
 
