@@ -72,13 +72,6 @@ and configures GPU 0 and OpenRouter's `google/gemini-3.8-flash`. For other setti
 configure your environment as described in [SETUP.md](SETUP.md) and use
 `scripts/run/ui.sh`.
 
-If the UI runs on a remote server, open a tunnel **on your own computer** and
-leave that terminal open. Replace `<ssh-host>` with your server's SSH alias:
-
-```bash
-ssh -N -o ExitOnForwardFailure=yes -L 127.0.0.1:7860:127.0.0.1:7860 <ssh-host>
-```
-
 Open [http://127.0.0.1:7860](http://127.0.0.1:7860):
 
 1. Select **Task**, **Seed**, and **Playbook** (for example, `BananaInBowlTask`, `0`, `v0`).
