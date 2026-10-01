@@ -1,8 +1,43 @@
-# RobotUse
+<div align="center">
 
-Robot agents. Prime decides what to do next, while Point, Grasp,
-Place, and Refiner handle perception and manipulation. The orchestrator manages
-sessions, tool permissions, delegation, and execution budgets.
+<h1>RobotUse</h1>
+<h3>Allocating Computation, Context, and Decisions</h3>
+
+<p>
+  <a href="https://junhoo.me/">Junhoo Lee</a><sup>*</sup> &middot;
+  <a href="https://injun-baek.github.io/">Injun Baek</a><sup>*</sup> &middot;
+  Seungyeon Kim &middot;
+  Suhyun Jeon<br>
+  Minkyu Kim &middot;
+  Baekseung Kim &middot;
+  Nojun Kwak<sup>&dagger;</sup>
+</p>
+
+<p><sup>*</sup> Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup> Corresponding author</p>
+
+<p>
+  <img src="docs/media/arxiv-button.svg" alt="arXiv — coming soon" height="34">
+  &nbsp;
+  <img src="docs/media/project-page-button.svg" alt="Project Page — coming soon" height="34">
+</p>
+
+</div>
+
+**RobotUse** is a robot agent harness that lets language-model agents specify and
+revise physical actions through visual target selection, grasp selection, and
+pose editing. Subagents keep detailed interactions in local contexts and return
+outcomes and unresolved constraints to the main agent, while the backend handles
+geometry, motion planning, and control.
+
+<p align="center">
+  <img src="docs/media/robotuse-overview.png" alt="RobotUse overview: a main agent delegates visual action choices to a subagent and robot backend; a separate loop refines the playbook across episodes." width="100%">
+</p>
+
+<p align="center"><em>Overview from the paper. Agents decide in language and on images; the backend plans and controls. The dashed loop shows playbook refinement across episodes.</em></p>
+
+## News
+
+- **2026-10-01:** Added the initial codebase, setup guide, and web UI.
 
 ## Setup and execution
 

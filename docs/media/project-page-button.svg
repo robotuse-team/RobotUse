@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="174" height="34" viewBox="0 0 174 34" role="img" aria-labelledby="title">
+  <title id="title">Project Page — coming soon</title>
+  <rect x="0.5" y="0.5" width="173" height="33" rx="6" fill="#f6f8fa" stroke="#d0d7de"/>
+  <g fill="none" stroke="#57606a" stroke-width="1.4">
+    <circle cx="18" cy="17" r="7"/>
+    <ellipse cx="18" cy="17" rx="3" ry="7"/>
+    <path d="M11 17h14"/>
+  </g>
+  <text x="34" y="21.5" fill="#57606a" font-family="Arial, sans-serif" font-size="13" font-weight="600">Project Page</text>
+  <path d="M121.5 8v18" stroke="#d8dee4"/>
+  <text x="134" y="21" fill="#6e7781" font-family="Arial, sans-serif" font-size="11">Soon</text>
+</svg>
