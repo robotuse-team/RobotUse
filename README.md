@@ -93,7 +93,7 @@ environment as described in [SETUP.md](SETUP.md) and use `scripts/run/ui.sh`.
 
 Open [http://127.0.0.1:7860](http://127.0.0.1:7860):
 
-1. Select **Task**, **Seed**, and **Playbook** (for example, `BananaInBowlTask`, `0`, `v0`).
+1. Select **Task**, **Seed**, and **Playbook** (for example, `BananaInBowlTask`, `0`, `v3`).
 2. Choose **Configuration check** to validate settings without starting the simulator
    or calling an LLM, or **Run episode** for actual simulator execution with LLM calls.
 3. Click **Start**. Front and wrist views refresh every second; **Activity** shows
@@ -122,7 +122,7 @@ scripts/run/robolab.sh --task BananaInBowlTask --seed 0 \
 Remove `--dry-run` to execute an episode. Use a new output directory for each run.
 Run `scripts/run/robolab.sh --help` for the supported options. Execution stages
 and candidate selection policies are fixed internally.
-The default policy is v0 and the default planner is native. cuRobo requires
+The default policy is v3 and the default planner is native. cuRobo requires
 separate installation and calibration, and is enabled only when explicitly
 selected. For a live RoboLab check without an LLM, see the
 [setup guide](SETUP.md#native-check-without-an-llm).

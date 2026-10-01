@@ -10,6 +10,7 @@ import os
 import gradio as gr
 
 from src.ui.runner import EpisodeRunner, display_text
+from src.agent.playbook import DEFAULT_VERSION as DEFAULT_PLAYBOOK_VERSION
 from src.utils.logging_utils import configure_logging, redact_data
 
 CSS = """
@@ -88,7 +89,7 @@ def build_app(runner: EpisodeRunner | None = None) -> gr.Blocks:
                 instruction = gr.Markdown(description(default), elem_id="task-instruction")
                 with gr.Row():
                     seed = gr.Number(value=0, precision=0, minimum=0, maximum=2**32-1, label="Seed")
-                    playbook = gr.Dropdown(["v0", "v1", "v2", "v3"], value="v0", label="Playbook")
+                    playbook = gr.Dropdown(["v0", "v1", "v2", "v3"], value=f"v{DEFAULT_PLAYBOOK_VERSION}", label="Playbook")
                 mode = gr.Radio(["Run episode", "Configuration check"], value="Configuration check", label="Mode")
                 gr.Markdown("Episode runs use the provider and model configured in your environment.", elem_classes="hint")
                 with gr.Row():

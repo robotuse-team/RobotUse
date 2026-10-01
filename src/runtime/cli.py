@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Resolve configuration and run a RobotUse episode.
 
-Playbook v0 is the default; v1, v2 and v3 are explicit
+Playbook v3 is the default; v0, v1 and v2 are explicit
 choices. --dry-run validates configuration without simulator/model startup.
 """
 import argparse
@@ -18,7 +18,8 @@ from src.runtime.resolution import configuration_parser, resolve_configuration
 from src.runtime.episode import run_episode
 from src.utils.gpu import gpu_visibility, physical_gpu_index
 DEFAULT_CONFIG = REPOSITORY_ROOT / 'configs/robot.json'
-from src.agent.playbook.v0 import PATH as PLAYBOOK_PATH, VERSION as PLAYBOOK_VERSION
+from src.agent.playbook import DEFAULT_VERSION as PLAYBOOK_VERSION
+from src.agent.playbook.v0 import PATH as PLAYBOOK_V0_PATH
 from src.agent.playbook.v1 import PATH as PLAYBOOK_V1_PATH
 from src.agent.playbook.v2 import PATH as PLAYBOOK_V2_PATH
 from src.agent.playbook.v3 import PATH as PLAYBOOK_V3_PATH
@@ -37,7 +38,7 @@ def resolve(argv=None):
     parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     parser.add_argument('--playbook-version', choices=('v0', 'v1', 'v2', 'v3', '0', '1', '2', '3'),
         default='v' + PLAYBOOK_VERSION,
-        help='Role-scoped decision policy (default: v0).')
+        help=f'Role-scoped decision policy (default: v{PLAYBOOK_VERSION}).')
     parser.add_argument('--transit-planner', choices=('native', 'curobo'), default='native',
         help='Observed-world transit planner; native preserves existing robot motion.')
     parser.add_argument('--curobo-robot-file', type=Path,
@@ -56,7 +57,7 @@ def resolve(argv=None):
     elif options.curobo_robot_file is not None or options.curobo_calibration_file is not None:
         raise ValueError('cuRobo configuration requires --transit-planner curobo')
     version = options.playbook_version.removeprefix('v')
-    path = {'0': PLAYBOOK_PATH, '1': PLAYBOOK_V1_PATH,
+    path = {'0': PLAYBOOK_V0_PATH, '1': PLAYBOOK_V1_PATH,
             '2': PLAYBOOK_V2_PATH, '3': PLAYBOOK_V3_PATH}[version]
     resolved, record, dry, configuration = resolve_configuration(
         remaining, configuration_name='RobotUse', default_config=DEFAULT_CONFIG)

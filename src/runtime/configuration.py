@@ -9,7 +9,7 @@ from src.tools.grasp.adapter import ContactGraspNetClient
 from src.utils.gpu import gpu_visibility
 
 
-from src.agent.playbook.v0 import PATH as DEFAULT_PLAYBOOK_PATH, VERSION as DEFAULT_PLAYBOOK_VERSION
+from src.agent.playbook import DEFAULT_PATH as DEFAULT_PLAYBOOK_PATH, DEFAULT_VERSION as DEFAULT_PLAYBOOK_VERSION
 
 
 @dataclass(frozen=True)

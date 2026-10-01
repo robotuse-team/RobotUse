@@ -44,7 +44,7 @@ resolved, record, dry, configuration = resolve([
 backend, orchestrator = classes()
 assert all(cls.__module__.startswith(('src.', 'builtins')) for cls in backend.__mro__)
 assert all(cls.__module__.startswith(('src.', 'builtins')) for cls in orchestrator.__mro__)
-assert record['decision_playbook']['version'] == '0'
+assert record['decision_playbook']['version'] == '3'
 assert configuration.observed_transit_planner is None
 assert not any('skills_src' in path for path in sys.path)
 from src.simulator.robolab.adapter import initialize
@@ -89,7 +89,7 @@ def test_shell_entrypoint_works_from_other_directory_without_starting_runtime(tm
         cwd=tmp_path, env=env, capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     record = json.loads(result.stdout)
-    assert record['decision_playbook']['version'] == '0'
+    assert record['decision_playbook']['version'] == '3'
     assert 'transit_planner' not in record['robotuse']
     assert not output.exists()
 

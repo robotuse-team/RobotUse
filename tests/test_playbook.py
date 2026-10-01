@@ -18,11 +18,11 @@ from runtime_test_support import flags
 from test_orchestrator import Backend
 
 
-def test_default_configuration_loads_original_v0_playbook():
+def test_default_configuration_loads_v3_playbook():
     config = RuntimeConfiguration()
-    assert config.load_playbook() == DecisionPlaybook.load(run_episode.PLAYBOOK_PATH)
-    assert config.playbook_version == '0'
-    assert config.load_playbook().path.name == 'v0.md'
+    assert config.load_playbook() == DecisionPlaybook.load(run_episode.PLAYBOOK_V3_PATH)
+    assert config.playbook_version == '3'
+    assert config.load_playbook().path.name == 'v3.md'
 
 
 @pytest.mark.parametrize('role', [role for role in ROLES if role != 'common'])
@@ -48,7 +48,7 @@ def test_every_role_receives_its_own_section_and_common_guidance(tmp_path, role,
 
 
 @pytest.mark.parametrize('entrypoint,options', [(run_episode, []),
-    (run_episode, ['--playbook-version', 'v1']), (run_episode, ['--playbook-version', 'v2']), (run_episode, ['--playbook-version', 'v3'])])
+    (run_episode, ['--playbook-version', 'v0']), (run_episode, ['--playbook-version', 'v1']), (run_episode, ['--playbook-version', 'v2'])])
 def test_runtime_persisted_playbook_matches_resolved_configuration(tmp_path, monkeypatch, entrypoint, options):
     import src.simulator.robolab.configuration as profiles
     import src.runtime.configuration as runtime
@@ -83,7 +83,7 @@ def test_runtime_persisted_playbook_matches_resolved_configuration(tmp_path, mon
 def test_invalid_playbook_fails_dry_run_before_startup(tmp_path, monkeypatch, content):
     path = tmp_path / 'invalid.md'
     path.write_text(content)
-    monkeypatch.setattr(run_episode, 'PLAYBOOK_PATH', path)
+    monkeypatch.setattr(run_episode, 'PLAYBOOK_V3_PATH', path)
     with pytest.raises(ValueError, match='decision playbook'):
         run_episode.resolve([*flags(tmp_path), '--dry-run'])
     assert not (tmp_path / 'live').exists()
@@ -175,7 +175,7 @@ def test_invalid_playbook_version_rejects_before_shared_runner(tmp_path, monkeyp
     assert not (tmp_path / 'live').exists()
 
 
-@pytest.mark.parametrize('options,expected', [([], '0'), (['--playbook-version=v1'], '1'), (['--playbook-version=v2'], '2'), (['--playbook-version=v3'], '3')])
+@pytest.mark.parametrize('options,expected', [([], '3'), (['--playbook-version=v0'], '0'), (['--playbook-version=v1'], '1'), (['--playbook-version=v2'], '2'), (['--playbook-version=v3'], '3')])
 def test_dry_run_selected_playbook_never_probes_or_starts_cgn(tmp_path, monkeypatch, capsys, options, expected):
     from src.tools.grasp import service as cgn_preflight
     monkeypatch.setattr(cgn_preflight, 'ensure_cgn',

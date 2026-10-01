@@ -77,7 +77,7 @@ Tools are discovered automatically rather than manually registered in `list.py`.
 Missing declarations, duplicates, and invalid contracts cause startup errors.
 The orchestrator separates Prime's decisions from execution control.
 
-The default policy is v0 and the default planner is native. cuRobo is enabled
+The default policy is v3 and the default planner is native. cuRobo is enabled
 only when explicitly selected. Grasp, place, and release remain separate
 operations with explicit input and output contracts.
 
