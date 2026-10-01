@@ -78,17 +78,18 @@ disabled until explicitly configured and selected.
 
 ### Web UI
 
-Set the API key in the environment used to launch the UI:
+Launch the UI with the OpenRouter preset:
 
 ```bash
-export OPENROUTER_API_KEY='your-key'
 scripts/run/ui_openrouter.sh
 ```
 
-This preset selects the installed virtual environment and uses GPU 0 with
-OpenRouter's `google/gemini-3.8-flash`. For other settings,
-configure your environment as described in [SETUP.md](SETUP.md) and use
-`scripts/run/ui.sh`.
+The preset defaults to `google/gemini-3.8-flash` and preserves your model and GPU
+settings. Opening the UI, browsing history, and checking configuration do not
+require an API key. For actual episodes, export `OPENROUTER_API_KEY` in the launch
+environment and complete the [runtime setup](SETUP.md#runtime-environment),
+including Isaac Sim terms acceptance. For another provider, configure your
+environment as described in [SETUP.md](SETUP.md) and use `scripts/run/ui.sh`.
 
 Open [http://127.0.0.1:7860](http://127.0.0.1:7860):
 

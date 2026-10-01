@@ -15,6 +15,7 @@ from urllib.request import urlopen
 
 import numpy as np
 from src.tools.grasp.cgn_client import ContactGraspNetClient, CAMERA_OPTICAL
+from src.utils.gpu import gpu_visibility, physical_gpu_index
 
 DEFAULT_SOURCE = Path(__file__).resolve().parent
 DEFAULT_LIBRARY_PATH = None
@@ -56,7 +57,9 @@ def ensure_cgn(url, *, evidence_dir, timeout_s=120, startup_timeout_s=180):
     lock_dir = Path(os.environ.get('ROBOTUSE_CGN_LOCK_DIR', '/tmp'))
     with (lock_dir / f'robotuse-cgn-{port}.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        result = {'url': url, 'physical_gpu': int(os.environ.get('ROBOTUSE_CGN_GPU', '0')), 'checked_at': now(), 'started': False}
+        requested_gpu = gpu_visibility('ROBOTUSE_CGN_GPU')
+        result = {'url': url, 'requested_gpu': requested_gpu, 'physical_gpu': None,
+                  'gpu_source': 'unknown', 'checked_at': now(), 'started': False}
         try:
             try:
                 with socket.create_connection((parsed.hostname, port), timeout=2):
@@ -73,7 +76,7 @@ def ensure_cgn(url, *, evidence_dir, timeout_s=120, startup_timeout_s=180):
                     raise FileNotFoundError('Set ROBOTUSE_CGN_PYTHON to the installed CGN runtime interpreter')
                 env = {k: v for k, v in os.environ.items() if k not in
                        ('PYTHONPATH', 'PYTHONHOME', 'PYTHONEXE', 'LD_LIBRARY_PATH', 'VIRTUAL_ENV')}
-                env.update(CUDA_VISIBLE_DEVICES=os.environ.get('ROBOTUSE_CGN_GPU', '0'), PYTHONUNBUFFERED='1', PYOPENGL_PLATFORM='egl',
+                env.update(CUDA_VISIBLE_DEVICES=requested_gpu, PYTHONUNBUFFERED='1', PYOPENGL_PLATFORM='egl',
                            PYTHONDONTWRITEBYTECODE='1')
                 dependency_path = os.environ.get('ROBOTUSE_CGN_PYTHONPATH')
                 if dependency_path:
@@ -92,6 +95,7 @@ def ensure_cgn(url, *, evidence_dir, timeout_s=120, startup_timeout_s=180):
                         stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT,
                         start_new_session=True)
                 result.update(started=True, pid=process.pid, command=command, source=str(source),
+                              physical_gpu=physical_gpu_index(requested_gpu), gpu_source='launch_environment',
                               runtime_library_path=env.get('LD_LIBRARY_PATH'))
                 (evidence_dir / 'server-process.json').write_text(json.dumps(result, indent=2)+'\n')
                 deadline = time.monotonic() + startup_timeout_s
@@ -106,6 +110,7 @@ def ensure_cgn(url, *, evidence_dir, timeout_s=120, startup_timeout_s=180):
                             raise TimeoutError('CGN did not become ready before startup deadline; see server.log')
                         time.sleep(1)
             else:
+                result['gpu_source'] = 'unknown_existing_service'
                 api_ready(url)
             result.update(inference_probe(url, timeout_s), ready=True)
         except Exception as exc:

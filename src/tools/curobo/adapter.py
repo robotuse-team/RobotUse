@@ -409,7 +409,7 @@ class CuroboPlanner:
                     source_hashes={str(path): digest for path, digest in self._fingerprints.items()})
 
     def validate_runtime(self):
-        """Check installed dependency paths/pin before service/simulator startup.
+        """Check installed dependency paths/pin before simulator startup.
 
         GPU availability and loaded planner joint/frame checks require actual
         planner initialization and are enforced before returning any trajectory.

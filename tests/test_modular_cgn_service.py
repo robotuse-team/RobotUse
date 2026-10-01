@@ -1,6 +1,7 @@
 """The standalone service uses tool-local originals and isolated dependencies."""
 
 from pathlib import Path
+import json
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -29,12 +30,23 @@ def test_missing_model_assets_fail_before_importing_service(tmp_path, monkeypatc
         service_worker.create_service()
 
 
-@pytest.mark.parametrize('gpu', [None, '0', '3'])
-def test_local_start_uses_worker_with_explicit_dependency_paths(tmp_path, monkeypatch, gpu):
+@pytest.mark.parametrize('gpu,inherited,visibility,physical', [
+    (None, None, '0', 0),
+    ('0', '2,3', '0', 0),
+    ('3', '7', '3', 3),
+    (None, '2,3', '2,3', 2),
+    (None, 'GPU-example', 'GPU-example', None),
+    (None, '', '', None),
+])
+def test_local_start_uses_worker_with_explicit_dependency_paths(tmp_path, monkeypatch,
+                                                              gpu, inherited, visibility, physical):
     monkeypatch.setenv("ROBOTUSE_CGN_PYTHON", sys.executable)
     monkeypatch.setenv("ROBOTUSE_CGN_PYTHONPATH", "/runtime/cgn-dependencies")
     monkeypatch.setenv("ROBOTUSE_CGN_LOCK_DIR", str(tmp_path))
     monkeypatch.setenv("PYTHONPATH", "/unrelated/simulator")
+    monkeypatch.delenv("CUDA_VISIBLE_DEVICES", raising=False)
+    if inherited is not None:
+        monkeypatch.setenv("CUDA_VISIBLE_DEVICES", inherited)
     monkeypatch.delenv("ROBOTUSE_CGN_GPU", raising=False)
     if gpu is not None:
         monkeypatch.setenv("ROBOTUSE_CGN_GPU", gpu)
@@ -53,5 +65,12 @@ def test_local_start_uses_worker_with_explicit_dependency_paths(tmp_path, monkey
     assert captured["command"][1] == str(Path(service_worker.__file__))
     assert captured["env"]["PYTHONPATH"] == "/runtime/cgn-dependencies"
     assert captured["env"]["PYTHONDONTWRITEBYTECODE"] == "1"
-    assert captured["env"]["CUDA_VISIBLE_DEVICES"] == (gpu or "0")
-    assert result["physical_gpu"] == int(gpu or "0")
+    assert captured["env"]["CUDA_VISIBLE_DEVICES"] == visibility
+    assert result["requested_gpu"] == visibility
+    assert result["physical_gpu"] == physical
+    assert result["gpu_source"] == "launch_environment"
+    launched = json.loads((tmp_path / "evidence/server-process.json").read_text())
+    assert launched["requested_gpu"] == visibility
+    assert launched["physical_gpu"] == physical
+    assert launched["gpu_source"] == "launch_environment"
+    assert json.loads((tmp_path / "evidence/preflight.json").read_text()) == result

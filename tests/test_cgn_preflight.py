@@ -17,6 +17,8 @@ class Socket:
 
 
 def test_open_port_is_insufficient_and_does_not_replace_server(tmp_path, monkeypatch):
+    monkeypatch.setenv('ROBOTUSE_CGN_LOCK_DIR', str(tmp_path))
+    monkeypatch.setenv('ROBOTUSE_CGN_GPU', '3')
     monkeypatch.setattr(preflight.socket, 'create_connection', lambda *a, **k: Socket())
     monkeypatch.setattr(preflight, 'api_ready', lambda *a: None)
     monkeypatch.setattr(preflight.subprocess, 'Popen', lambda *a, **k: pytest.fail('must not replace service'))
@@ -28,6 +30,33 @@ def test_open_port_is_insufficient_and_does_not_replace_server(tmp_path, monkeyp
         preflight.ensure_cgn('http://127.0.0.1:8115', evidence_dir=tmp_path)
     record = json.loads((tmp_path / 'preflight.json').read_text())
     assert record['ready'] is False and record['error_details']['phase'] == 'cgn_preflight'
+    assert record['requested_gpu'] == '3'
+    assert record['physical_gpu'] is None
+    assert record['gpu_source'] == 'unknown_existing_service'
+
+
+@pytest.mark.parametrize('url', ['http://127.0.0.1:8115', 'http://cgn.example.test:8115'])
+def test_reused_service_does_not_claim_requested_gpu(tmp_path, monkeypatch, url):
+    monkeypatch.setenv('ROBOTUSE_CGN_LOCK_DIR', str(tmp_path))
+    monkeypatch.setenv('ROBOTUSE_CGN_GPU', '3')
+    monkeypatch.setattr(preflight.socket, 'create_connection', lambda *a, **k: Socket())
+    monkeypatch.setattr(preflight.subprocess, 'Popen', lambda *a, **k: pytest.fail('must not replace service'))
+    checks = []
+    monkeypatch.setattr(preflight, 'api_ready', lambda target: checks.append(('api', target)))
+    def probe(target, timeout):
+        checks.append(('inference', target, timeout))
+        return {'inference_completed': True}
+    monkeypatch.setattr(preflight, 'inference_probe', probe)
+
+    result = preflight.ensure_cgn(url, evidence_dir=tmp_path, timeout_s=17)
+
+    assert result['ready'] is True and result['started'] is False
+    assert result['requested_gpu'] == '3'
+    assert result['physical_gpu'] is None
+    assert result['gpu_source'] == 'unknown_existing_service'
+    assert checks == [('api', url), ('inference', url, 17)]
+    assert not (tmp_path / 'server-process.json').exists()
+    assert json.loads((tmp_path / 'preflight.json').read_text()) == result
 
 
 def test_failure_happens_before_episode_runner(tmp_path, monkeypatch):

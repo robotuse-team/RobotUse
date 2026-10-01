@@ -15,7 +15,7 @@ case "${1:-}" in
   -h|--help)
     echo 'Usage: scripts/setup/cgn.sh [--smoke-test]'
     echo 'ROBOTUSE_RUNTIME_ROOT: writable runtime destination; CGN_BASE_PYTHON: Python 3.11.9 executable.'
-    echo 'Optional GPU smoke uses CGN_SMOKE_GPU (default: ROBOTUSE_CGN_GPU or 0).'
+    echo 'GPU smoke: CGN_SMOKE_GPU, then ROBOTUSE_CGN_GPU, inherited CUDA_VISIBLE_DEVICES, or 0.'
     exit 0 ;;
   *) echo "Unknown option: $1" >&2; exit 2 ;;
 esac
@@ -94,7 +94,7 @@ uv pip sync --python "$cgn_environment/bin/python" --index-strategy unsafe-best-
 uv pip check --python "$cgn_environment/bin/python"
 
 PYTHONPATH="$repository_root" "$cgn_environment/bin/python" - \
-  "$cgn_environment" "$cgn_requirements" "$cgn_smoke" "${CGN_SMOKE_GPU:-${ROBOTUSE_CGN_GPU:-0}}" <<'PY'
+  "$cgn_environment" "$cgn_requirements" "$cgn_smoke" <<'PY'
 import datetime
 import hashlib
 import importlib.metadata
@@ -108,6 +108,7 @@ import sys
 import time
 
 from src.tools.grasp.service_worker import CGN_SOURCE, SERVICE_SOURCE, verify_service_source
+from src.utils.gpu import gpu_visibility, physical_gpu_index
 
 environment, requirements = map(Path, sys.argv[1:3])
 manifest = verify_service_source()
@@ -127,7 +128,7 @@ if sys.argv[3] == 'true':
     evidence = environment.parent.parent / 'setup-checks' / (
         'cgn-' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ'))
     evidence.mkdir(parents=True, exist_ok=False)
-    gpu = sys.argv[4]
+    gpu = os.environ['CGN_SMOKE_GPU'] if 'CGN_SMOKE_GPU' in os.environ else gpu_visibility('ROBOTUSE_CGN_GPU')
     child_env = {k: v for k, v in os.environ.items() if k != 'PYTHONPATH'}
     child_env.update(CUDA_VISIBLE_DEVICES=gpu, PYTHONUNBUFFERED='1')
     gpu_check = subprocess.check_output([sys.executable, '-c',
@@ -155,7 +156,8 @@ if sys.argv[3] == 'true':
                 if time.monotonic() >= deadline:
                     raise TimeoutError(f'CGN startup timed out; inspect {evidence / "server.log"}')
                 time.sleep(1)
-        smoke = dict(inference_probe(url), physical_gpu=gpu, gpu=json.loads(gpu_check),
+        smoke = dict(inference_probe(url), physical_gpu=physical_gpu_index(gpu),
+                     cuda_visible_devices=gpu, gpu=json.loads(gpu_check),
                      command=command, python=platform.python_version(), torch=torch.__version__)
         (evidence / 'inference.json').write_text(json.dumps(smoke, indent=2) + '\n')
         result['gpu_smoke'] = str(evidence / 'inference.json')

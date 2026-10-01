@@ -101,12 +101,13 @@ def test_env_file_preserves_explicit_public_interpreters_and_gpu(shell, tmp_path
         pytest.skip(f'{shell} is not installed')
     env = dict(os.environ, ROBOTUSE_RUNTIME_ROOT=str(tmp_path), ROBOTUSE_CGN_PYTHON='/cgn/python',
                ROBOTUSE_CUROBO_PYTHON='/curobo/python')
+    env.pop('CUDA_VISIBLE_DEVICES', None)
     for name in ('ROBOTUSE_GPU', 'ROBOTUSE_CGN_GPU'):
         env.pop(name, None)
         if gpu is not None:
             env[name] = gpu
-    command = 'set -e; source "$1"; printf "%s\\n" "$ROBOTUSE_CGN_PYTHON" "$ROBOTUSE_CUROBO_PYTHON" "$ROBOTUSE_GPU" "$ROBOTUSE_CGN_GPU"'
-    result = subprocess.run([shell, '-c', command, 'env-test', str(ROOT / 'scripts/lib/env.sh')],
+    command = 'set -e; unset CUDA_VISIBLE_DEVICES; source "$1"; printf "%s\\n" "$ROBOTUSE_CGN_PYTHON" "$ROBOTUSE_CUROBO_PYTHON" "$ROBOTUSE_GPU" "$ROBOTUSE_CGN_GPU"'
+    result = subprocess.run([shell, '-f', '-c', command, 'env-test', str(ROOT / 'scripts/lib/env.sh')],
                             cwd=tmp_path, env=env, text=True,
                             capture_output=True, check=True, timeout=20)
     assert result.stdout.splitlines() == ['/cgn/python', '/curobo/python', gpu or '0', gpu or '0']

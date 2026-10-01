@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from functools import partial
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 from types import SimpleNamespace
@@ -32,6 +33,8 @@ def main():
                         help="Explicit destination point in the front RGB, normalized to 0..1000")
     parser.add_argument("--execute", action="store_true", help="Also execute the checked grasp, place, and explicit release")
     args = parser.parse_args()
+    from src.utils.gpu import gpu_visibility
+    os.environ['CUDA_VISIBLE_DEVICES'] = gpu_visibility()
     from src.simulator.robolab.validation import (
         ValidationRecorder, check_backend, check_connector, write_result)
     from src.simulator.robolab.verifier import task_score

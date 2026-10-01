@@ -55,12 +55,13 @@ def test_observation_and_review_are_independent_opt_ins(tmp_path, observe, revie
     assert args.pause_refine and config.pose_preview_editor
 
 
-def test_dispatch_records_configuration_and_gpu(tmp_path, monkeypatch):
+@pytest.mark.parametrize('visible,physical', [('1', 1), ('4,2', 4), ('GPU-assigned', None), ('', None)])
+def test_dispatch_records_configuration_and_gpu(tmp_path, monkeypatch, visible, physical):
     import src.simulator.robolab.adapter as cli
 
     def run(argv, configuration):
-        assert os.environ['CUDA_VISIBLE_DEVICES'] == '0'
-        assert configuration.metadata()['gpu'] == 'CUDA_VISIBLE_DEVICES=0; logical cuda:0'
+        assert os.environ['CUDA_VISIBLE_DEVICES'] == visible
+        assert configuration.metadata()['gpu'] == f'CUDA_VISIBLE_DEVICES={visible}; logical cuda:0'
         args = runner.parse_args(argv)
         assert not args.observe_before_grasp and not args.auto_refine_routes
         assert not configuration.mandatory_observation
@@ -72,11 +73,12 @@ def test_dispatch_records_configuration_and_gpu(tmp_path, monkeypatch):
     monkeypatch.setattr(run_episode, 'run_episode', run)
     monkeypatch.setattr(cli, 'run_native_cli', lambda call: call())
     monkeypatch.delenv('ROBOTUSE_GPU', raising=False)
-    monkeypatch.setenv('CUDA_VISIBLE_DEVICES', '1')
+    monkeypatch.setenv('CUDA_VISIBLE_DEVICES', visible)
     assert run_episode.main(flags(tmp_path)) == 0
     record = json.loads((tmp_path / 'live' / 'robotuse_configuration.json').read_text())
     assert record['configuration'] == 'RobotUse' and not record['manipulation']['mandatory_observation']
-    assert record['physical_gpu'] == 0
+    assert record['physical_gpu'] == physical
+    assert record['cuda_visible_devices'] == visible
     assert record['robotuse']['refiner_review'] == ['paused_pregrasp']
 
 
@@ -101,7 +103,7 @@ def test_shared_runtime_preserves_optional_observation_before_simulator(tmp_path
         pass
 
     def stop(args, configuration):
-        assert os.environ['CUDA_VISIBLE_DEVICES'] == '0'
+        assert os.environ['CUDA_VISIBLE_DEVICES'] == '1'
         assert args.observe_before_grasp is observe
         assert not configuration.mandatory_observation
         raise BeforeSimulator

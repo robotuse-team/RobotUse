@@ -14,7 +14,7 @@ Git LFS and `uv 0.12.17` are required. On Ubuntu, install the following system p
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y python3 python3-pip ca-certificates git git-lfs curl ffmpeg libglu1-mesa libegl1 libgl1 libgomp1 zsh
+sudo apt-get install -y python3 python3-pip ca-certificates git git-lfs curl ffmpeg libglu1-mesa libegl1 libgl1 libgomp1
 python3 -m pip install --user uv==0.12.17
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -76,6 +76,13 @@ models in `runtime/model-cache/`. To use another location, set
 Installation through symbolic links is rejected to avoid accidentally modifying
 an existing installation.
 
+For separate CPU or UI environment locations, set `CPU_ENVIRONMENT` or
+`UI_ENVIRONMENT` before setup and launch. Launchers and environment checks select
+the interpreter in this order: `ROBOTUSE_CPU_PYTHON` / `ROBOTUSE_UI_PYTHON`,
+the corresponding `*_ENVIRONMENT/bin/python`, then the runtime default above.
+The `*_PYTHON` overrides select an existing interpreter; installation uses the
+environment directory settings.
+
 The native dependency lock preserves the runtime versions used for validation.
 Some differ from Isaac wheel metadata for packages such as Pillow and websockets;
 dependency resolution overrides are recorded in `requirements/robolab-overrides.txt`.
@@ -87,28 +94,26 @@ for the upstream installation workflow.
 ## Runtime environment
 
 ```bash
-# Select GPU indices explicitly. This example uses a machine with one GPU.
-export ROBOTUSE_GPU=0 ROBOTUSE_CGN_GPU=0
 source scripts/lib/env.sh
 
 # Set this after reviewing and accepting the Isaac Sim terms of use.
 export OMNI_KIT_ACCEPT_EULA=Y
 
-runtime/tool-envs/cpu/bin/python scripts/check/setup.py --gpu
-runtime/tool-envs/cpu/bin/python -m pytest
+"$ROBOTUSE_CPU_PYTHON" scripts/check/setup.py --gpu
+"$ROBOTUSE_CPU_PYTHON" -m pytest
 ```
 
-If you use an external runtime directory, replace the Python path above with
-`$ROBOTUSE_RUNTIME_ROOT/tool-envs/cpu/bin/python`. The checker verifies source
-revisions, original file hashes, checkpoints, LFS assets, package versions, and
-the GPU without calling an LLM. Both `ROBOTUSE_GPU` and `ROBOTUSE_CGN_GPU`
-default to 0; set either variable to select a different GPU.
+The checker verifies source revisions, original file hashes, checkpoints,
+LFS assets, package versions, and the GPU without calling an LLM. Existing
+`CUDA_VISIBLE_DEVICES` is preserved. Set `ROBOTUSE_GPU` or `ROBOTUSE_CGN_GPU`
+to a physical GPU index to override that selection for the simulator or CGN,
+respectively; with no selection, both use GPU 0.
 
 To check inference through the actual CGN service, run the following command.
 It starts the service on a temporary port and stops it after the check.
 
 ```bash
-CGN_SMOKE_GPU=0 scripts/setup/cgn.sh --smoke-test
+scripts/setup/cgn.sh --smoke-test
 ```
 
 Agent execution requires provider credentials. Supply keys through environment
@@ -129,8 +134,7 @@ an actual run. Specify a model ID available from your provider.
 ## Native check without an LLM
 
 ```bash
-CUDA_VISIBLE_DEVICES="$ROBOTUSE_GPU" ROBO_RENDER_GPU=0 \
-  "$ROBOLAB_PYTHON" scripts/check/native.py \
+ROBO_RENDER_GPU=0 "$ROBOLAB_PYTHON" scripts/check/native.py \
   --sam-python "$PWD/src/tools/perception/python.sh" \
   --sam2-snapshot "$ROBOTUSE_RUNTIME_ROOT/model-cache/sam2" \
   --output-dir runs/native-check

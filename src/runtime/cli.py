@@ -16,6 +16,7 @@ from src.runtime.paths import REPOSITORY_ROOT
 from src.runtime.arguments import argument_parser, parse_args
 from src.runtime.resolution import configuration_parser, resolve_configuration
 from src.runtime.episode import run_episode
+from src.utils.gpu import gpu_visibility, physical_gpu_index
 DEFAULT_CONFIG = REPOSITORY_ROOT / 'configs/robot.json'
 from src.agent.playbook.v0 import PATH as PLAYBOOK_PATH, VERSION as PLAYBOOK_VERSION
 from src.agent.playbook.v1 import PATH as PLAYBOOK_V1_PATH
@@ -77,10 +78,9 @@ def resolve(argv=None):
         cgn_preflight_required=True, cgn_autostart=True,
         execution_features=dict(EXECUTION_FEATURES)))
     import os
-    gpu = os.environ.get('ROBOTUSE_GPU', '0')
-    if not gpu.isdecimal():
-        raise ValueError('ROBOTUSE_GPU must select one physical GPU index')
-    record['physical_gpu'] = int(gpu)
+    gpu = gpu_visibility()
+    record['physical_gpu'] = physical_gpu_index(gpu)
+    record['cuda_visible_devices'] = gpu
     record['manipulation']['gpu'] = f'CUDA_VISIBLE_DEVICES={gpu}; logical cuda:0'
     record['initial_pose_randomization'] = dict(enabled=args.randomize_init_pose,
         implementation='RandomizeInitPoseUniform', xy_range_m=args.init_pose_xy_range_m,
@@ -96,9 +96,6 @@ def main(argv=None):
     if not dry:
         import os
         from src.tools.grasp.service import ensure_cgn
-        os.environ['CUDA_VISIBLE_DEVICES'] = os.environ.get('ROBOTUSE_GPU', '0')
-        if configuration.observed_transit_planner is not None:
-            record['robotuse']['transit_planner']['runtime_dependencies'] = configuration.observed_transit_planner.validate_runtime()
         args = parse_args(resolved)
         if args.output_dir.exists():
             raise FileExistsError(args.output_dir)
@@ -108,6 +105,9 @@ def main(argv=None):
         record['cgn_preflight'] = {**ensure_cgn(configuration.cgn_service_url,
             evidence_dir=evidence_dir, timeout_s=configuration.cgn_timeout_s),
             'evidence_dir': str(evidence_dir.resolve())}
+        os.environ['CUDA_VISIBLE_DEVICES'] = gpu_visibility()
+        if configuration.observed_transit_planner is not None:
+            record['robotuse']['transit_planner']['runtime_dependencies'] = configuration.observed_transit_planner.validate_runtime()
     return execute(resolved, record, dry, configuration)
 
 
@@ -117,7 +117,7 @@ def execute(resolved, record, dry, configuration):
     if dry:
         print(json.dumps(record, indent=2))
         return 0
-    os.environ['CUDA_VISIBLE_DEVICES'] = os.environ.get('ROBOTUSE_GPU', '0')
+    os.environ['CUDA_VISIBLE_DEVICES'] = gpu_visibility()
     output = parse_args(resolved).output_dir
     if output.exists():
         raise FileExistsError(output)

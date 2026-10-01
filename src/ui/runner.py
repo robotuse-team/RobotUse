@@ -121,7 +121,8 @@ class EpisodeRunner:
             env["ROBOTUSE_LIVE_PREVIEW_DIR"] = str(run / "preview")
             if dry_run:
                 runtime = Path(env.get("ROBOTUSE_RUNTIME_ROOT", self.root / "runtime"))
-                env["ROBOLAB_PYTHON"] = env.get("ROBOTUSE_CPU_PYTHON", str(runtime / "tool-envs/cpu/bin/python"))
+                environment = Path(env.get("CPU_ENVIRONMENT") or runtime / "tool-envs/cpu")
+                env["ROBOLAB_PYTHON"] = env.get("ROBOTUSE_CPU_PYTHON") or str(environment / "bin/python")
             command = [str(self.root / "scripts/run/robolab.sh"), "--task", task,
                        "--seed", str(int(seed)), "--difficulty", "auto", "--playbook-version", playbook,
                        "--output-dir", str(run / "episode")]

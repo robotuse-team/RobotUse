@@ -10,6 +10,9 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from src.utils.gpu import gpu_visibility, physical_gpu_index
+
 PROFILES = {'cpu': '3.11.9', 'ui': '3.11.9', 'sam2': '3.11.9', 'cgn': '3.11.9',
             'robolab': '3.11.13', 'curobo': '3.11.13'}
 SOURCES = (
@@ -137,9 +140,10 @@ def check_environment(runtime, profile, gpu):
         raise ValueError(f'Empty dependency lock for {profile}')
     override = {'cpu': 'CPU_ENVIRONMENT', 'ui': 'UI_ENVIRONMENT', 'sam2': 'SAM2_ENVIRONMENT',
                 'curobo': 'CUROBO_ENVIRONMENT'}.get(profile)
-    environment = Path(os.environ.get(override, runtime / 'tool-envs' / profile)) if override else runtime / 'tool-envs' / profile
+    environment = Path(os.environ.get(override) or runtime / 'tool-envs' / profile) if override else runtime / 'tool-envs' / profile
     python = environment / 'bin/python'
     interpreter_overrides = {
+        'cpu': ('ROBOTUSE_CPU_PYTHON',),
         'ui': ('ROBOTUSE_UI_PYTHON',),
         'sam2': ('ROBOTUSE_SAM_PYTHON', 'SAM_RUNTIME_PYTHON'),
         'cgn': ('ROBOTUSE_CGN_PYTHON',),
@@ -179,17 +183,16 @@ print(json.dumps(result))
     gpu_check = gpu and profile not in {'cpu', 'ui'}
     if gpu_check:
         name = 'ROBOTUSE_CGN_GPU' if profile == 'cgn' else 'ROBOTUSE_GPU'
-        physical_gpu = os.environ.get(name) or '0'
-        if not physical_gpu.isdigit():
-            raise ValueError('Select one physical GPU index with ROBOTUSE_GPU or ROBOTUSE_CGN_GPU')
-        env.update(CUDA_DEVICE_ORDER='PCI_BUS_ID', CUDA_VISIBLE_DEVICES=physical_gpu)
+        visibility = gpu_visibility(name)
+        env['CUDA_VISIBLE_DEVICES'] = visibility
     process = subprocess.run([str(python), '-c', code], input=json.dumps([expected, gpu_check]),
                              capture_output=True, text=True, env=env, timeout=120)
     if process.returncode:
         raise RuntimeError(f'{profile} interpreter check failed: {process.stderr.strip()}')
     result = json.loads(process.stdout)
     if gpu_check:
-        result['gpu']['physical_index'] = int(physical_gpu)
+        result['gpu']['physical_index'] = physical_gpu_index(visibility)
+        result['gpu']['cuda_visible_devices'] = visibility
     if not result['virtual_environment'] or result['python'] != PROFILES[profile] or result['mismatches']:
         raise ValueError(f'{profile} differs from its pinned environment: {result}')
     return result

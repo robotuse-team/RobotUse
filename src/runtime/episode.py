@@ -11,6 +11,7 @@ from src.runtime.restart import InitialArmState, RestartLoop
 from src.llm.config import ProviderConfig
 from src.llm.manager import ImageRegistry, OpenRouterFactory
 from src.utils.logging_utils import write_json, append_json, configure_logging, get_logger
+from src.utils.gpu import gpu_visibility
 from src.tools.perception.adapter import PointRGBDAdapter
 
 
@@ -19,7 +20,7 @@ def run_episode(argv, configuration):
     grasp_policy = 'agent-choice'
     grasp_motion_policy, grasp_score_tolerance = args.grasp_motion_policy, args.grasp_score_tolerance
     from src.runtime.configuration import configure_args
-    os.environ['CUDA_VISIBLE_DEVICES'] = os.environ.get('ROBOTUSE_GPU', '0')
+    os.environ['CUDA_VISIBLE_DEVICES'] = gpu_visibility()
     args = configure_args(args)
     if configuration.mandatory_observation:
         args.observe_before_grasp = True

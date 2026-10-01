@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from typing import Callable
 
 from src.tools.grasp.adapter import ContactGraspNetClient
+from src.utils.gpu import gpu_visibility
 
 
 from src.agent.playbook.v0 import PATH as DEFAULT_PLAYBOOK_PATH, VERSION as DEFAULT_PLAYBOOK_VERSION
@@ -52,7 +53,7 @@ class RuntimeConfiguration:
             coordinate_frame='connector_base', length_units='metres', angle_units='degrees',
             geometric_rotation=('generated_top_down_edits_unrestricted' if self.pose_preview_editor else 'top_down_yaw_only'), direction_policy='agent_angular_threshold',
             transit_policy='independent_pre_post', release_policy='separate_explicit_agent_call',
-            gpu=f"CUDA_VISIBLE_DEVICES={os.environ.get('ROBOTUSE_GPU', '0')}; logical cuda:0")
+            gpu=f"CUDA_VISIBLE_DEVICES={gpu_visibility()}; logical cuda:0")
 
 
 def configure_args(args):

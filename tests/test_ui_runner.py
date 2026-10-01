@@ -23,6 +23,7 @@ args=sys.argv[1:]
 output=pathlib.Path(args[args.index('--output-dir')+1])
 task=args[args.index('--task')+1]
 print('credential='+os.environ.get('GOOGLE_API_KEY','none'), flush=True)
+print('runtime-python='+os.environ.get('ROBOLAB_PYTHON','none'), flush=True)
 if '--dry-run' in args:
     print(json.dumps({'configuration':'RobotUse','task':task}))
     raise SystemExit(0)
@@ -71,6 +72,32 @@ def test_dry_run_is_not_task_success_and_records_do_not_overwrite(runner, monkey
     wait_done(runner, second)
     assert first != second
     assert all(path.read_bytes() == data for path, data in recorded.items())
+
+
+@pytest.mark.parametrize('selection', ['runtime', 'environment', 'interpreter', 'empty'])
+def test_dry_run_cpu_interpreter_precedence(runner, monkeypatch, selection):
+    runtime = runner.root / 'custom runtime'
+    environment = runner.root / 'custom cpu'
+    explicit_python = runner.root / 'explicit python'
+    monkeypatch.setenv('ROBOTUSE_RUNTIME_ROOT', str(runtime))
+    monkeypatch.delenv('CPU_ENVIRONMENT', raising=False)
+    monkeypatch.delenv('ROBOTUSE_CPU_PYTHON', raising=False)
+    monkeypatch.setenv('ROBOLAB_PYTHON', '/simulator/python')
+    expected = runtime / 'tool-envs/cpu/bin/python'
+    if selection in ('environment', 'interpreter'):
+        monkeypatch.setenv('CPU_ENVIRONMENT', str(environment))
+        expected = environment / 'bin/python'
+    if selection == 'interpreter':
+        monkeypatch.setenv('ROBOTUSE_CPU_PYTHON', str(explicit_python))
+        expected = explicit_python
+    if selection == 'empty':
+        monkeypatch.setenv('CPU_ENVIRONMENT', '')
+        monkeypatch.setenv('ROBOTUSE_CPU_PYTHON', '')
+    episode = runner.start('PassTask', 0, 'v0', True)
+    state = wait_done(runner, episode)
+    assert state['status'].startswith('Configuration valid')
+    log = (runner.runs_root / episode / 'controller.log').read_text()
+    assert f'runtime-python={expected}' in log
 
 
 def test_single_active_process_and_cancel(runner):
