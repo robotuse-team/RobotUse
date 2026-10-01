@@ -16,7 +16,10 @@
 <p><sup>*</sup> Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup> Corresponding author</p>
 
 <p>
-  <img src="https://img.shields.io/badge/arXiv-RobotUse-red" alt="arXiv — coming soon" title="Coming soon">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/arXiv-Coming_soon-red">
+    <img src="https://img.shields.io/badge/arXiv-Coming_soon-red" alt="arXiv: Coming soon" title="Coming soon">
+  </picture>
   <img src="https://img.shields.io/badge/Project_Page-RobotUse-green" alt="Project Page — coming soon" title="Coming soon">
 </p>
 
