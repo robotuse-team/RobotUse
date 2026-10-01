@@ -1,0 +1,23 @@
+# cuRobo v0.8.0 (4ea77366...), Python 3.11.13, Linux x86_64 CUDA 12.8.
+# Import the immutable tool-local source; never pip-build inside third_party.
+torch==2.7.0+cu128
+numpy==1.26.4
+scipy==1.17.1
+warp-lang==1.13.0
+cuda-core==1.2.1
+cuda-bindings==12.9.9
+cuda-pathfinder==1.8.2
+nvidia-cuda-nvcc-cu12==12.8.61
+trimesh==5.1.0
+yourdfpy==0.0.60
+PyYAML==6.0.3
+lxml==6.1.3
+numpy-quaternion==2024.0.13
+matplotlib==3.11.2
+networkx==3.3
+tqdm==4.70.1
+setuptools-scm==10.3.4
+setuptools==84.0.0
+wheel==0.46.3
+importlib-resources==6.5.2
+viser==0.2.23

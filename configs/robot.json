@@ -1,0 +1,10 @@
+{
+  "name": "RobotUse",
+  "image_history_policy": "current_turn",
+  "runner_options": [
+    "--adaptive-grasp-opening", "--grasp-opening-padding-mm", "10",
+    "--randomize-init-pose", "--init-pose-xy-range-m", "0.1",
+    "--no-append-only-observations", "--sam-device", "cuda:0"
+  ],
+  "prime_turns_by_difficulty": {"simple": 40, "moderate": 50, "complex": 60}
+}

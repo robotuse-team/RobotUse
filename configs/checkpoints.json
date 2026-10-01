@@ -1,0 +1,18 @@
+{
+  "sam2": {
+    "model": "SAM2.1 Hiera Large",
+    "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "config": "configs/sam2.1/sam2.1_hiera_l.yaml",
+    "runtime_path": "model-cache/sam2/sam2.1_hiera_large.pt",
+    "url": "https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_large.pt",
+    "sha256": "2647878d5dfa5098f2f8649825738a9345572bae2d4350a2468587ece47dd318"
+  },
+  "contact_graspnet": {
+    "source_revision": "da3dcfb2f53e43b186083ee4a9d1e232f73efc98",
+    "delivery": "Files are included in the pinned Git submodule; no separate model download or source installation.",
+    "files": {
+      "src/tools/grasp/third_party/contact_graspnet/checkpoints/contact_graspnet/checkpoints/model.pt": "39fc3439d5814043ba64e0715c127c2e8aca6ea376c22614e11af1bc89317762",
+      "src/tools/grasp/third_party/contact_graspnet/checkpoints/contact_graspnet/config.yaml": "7ae6cc15c726e8ec2c46b0c799d58ca95caeb9ce9f261aaaf3e467712df76ac5"
+    }
+  }
+}

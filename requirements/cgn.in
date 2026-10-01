@@ -1,0 +1,17 @@
+# Linux x86_64 / CPython 3.11.9; source remains in the pinned CGN submodule.
+# Compile with the official PyTorch cu128 index and PyPI; cgn.txt pins all transitives.
+torch==2.7.0+cu128
+numpy==1.26.4
+scipy==1.17.1
+trimesh==4.5.3
+Pillow==12.3.0
+opencv-python-headless==4.11.0.86
+PyYAML==6.0.3
+pyrender==0.1.17
+PyOpenGL==3.1.10
+PyOpenGL-accelerate==3.1.10
+viser==1.1.1
+fastapi==0.115.12
+uvicorn==0.34.3
+tyro==0.9.26
+tqdm==4.70.1

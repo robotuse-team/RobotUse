@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotuse"
+version = "0.1.0"
+description = "Robot agents and tools for native RoboLab"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+dependencies = []
+
+[project.optional-dependencies]
+sensor = [
+    "imageio>=2.34,<3",
+    "numpy>=1.26,<3",
+    "Pillow>=10,<13",
+]
+test = [
+    "imageio>=2.34,<3",
+    "numpy>=1.26,<3",
+    "Pillow>=10,<13",
+    "pytest>=8,<9",
+    "scipy>=1.12,<2",
+    "trimesh>=4,<5",
+    "PyYAML>=6,<7",
+]
+curobo = [
+    "PyYAML>=6,<7",
+]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src", "src.*"]
+exclude = ["src.*.third_party", "src.*.third_party.*"]
+
+[tool.setuptools.package-data]
+"src.agent.playbook" = ["policies/*.md"]

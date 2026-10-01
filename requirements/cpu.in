@@ -1,0 +1,12 @@
+# Linux x86_64 / Python 3.11; pinned dependency closure.
+imageio==2.38.0
+iniconfig==2.3.0
+numpy==2.4.6
+packaging==26.3
+pillow==12.3.0
+pluggy==1.6.0
+pygments==2.21.0
+pytest==8.4.2
+pyyaml==6.0.3
+scipy==1.17.1
+trimesh==4.12.2

@@ -1,0 +1,7 @@
+# Explicitly reproduce versions observed in the working native runtime.
+# IsaacSim/IsaacLab wheel metadata pins older versions of these distributions.
+# Overrides affect resolution only; no upstream source or metadata is edited.
+Pillow==12.3.0
+websockets==17.1
+PyYAML==6.0.3
+requests==2.34.2

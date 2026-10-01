@@ -1,0 +1,12 @@
+[submodule "curobo"]
+	path = src/tools/curobo/third_party/curobo
+	url = https://github.com/NVlabs/curobo.git
+[submodule "contact_graspnet"]
+	path = src/tools/grasp/third_party/contact_graspnet
+	url = https://github.com/uynitsuj/contact_graspnet_pytorch.git
+[submodule "robolab"]
+	path = src/simulator/robolab/third_party/robolab
+	url = https://github.com/NVlabs/RoboLab.git
+[submodule "sam2"]
+	path = src/tools/perception/third_party/sam2
+	url = https://github.com/facebookresearch/sam2.git

@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+/build/
+/dist/
+.vscode/
+*.code-workspace
+.env
+.env.*
+!.env.example
+*.log
+
+# Local environments, model weights, generated assets and execution evidence.
+/runtime/
+/runs/
+/assets/
+/artifacts/
+/reports-local/
+/diagnostics/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
