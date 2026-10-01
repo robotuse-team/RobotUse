@@ -61,14 +61,15 @@ disabled until explicitly configured and selected.
 
 ### Web UI
 
-With `OPENROUTER_API_KEY` exported in `~/.zshrc`, run:
+Set the API key in the environment used to launch the UI:
 
 ```bash
+export OPENROUTER_API_KEY='your-key'
 scripts/run/ui_openrouter.sh
 ```
 
-This preset uses zsh to load your key, selects the installed virtual environment,
-and configures GPU 0 and OpenRouter's `google/gemini-3.8-flash`. For other settings,
+This preset selects the installed virtual environment and uses GPU 0 with
+OpenRouter's `google/gemini-3.8-flash`. For other settings,
 configure your environment as described in [SETUP.md](SETUP.md) and use
 `scripts/run/ui.sh`.
 
