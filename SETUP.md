@@ -43,11 +43,19 @@ python3 scripts/check/setup.py --sources-only
 
 ## Virtual environments and checkpoints
 
+For simulator episodes, install the three runtime environments:
+
 ```bash
-scripts/setup/cpu.sh
 scripts/setup/sam2.sh
 scripts/setup/cgn.sh
 scripts/setup/robolab.sh
+```
+
+Add the CPU environment for regression tests and configuration checks. Add the
+UI environment only when using the web interface:
+
+```bash
+scripts/setup/cpu.sh
 scripts/setup/ui.sh
 ```
 
@@ -99,7 +107,10 @@ source scripts/lib/env.sh
 # Set this after reviewing and accepting the Isaac Sim terms of use.
 export OMNI_KIT_ACCEPT_EULA=Y
 
-"$ROBOTUSE_CPU_PYTHON" scripts/check/setup.py --gpu
+# Core installation check; use the simulator interpreter already installed.
+"$ROBOLAB_PYTHON" scripts/check/setup.py --profiles sam2 cgn robolab --gpu
+
+# Optional CPU checks, after scripts/setup/cpu.sh:
 "$ROBOTUSE_CPU_PYTHON" -m pytest
 ```
 

@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 from src.runtime.paths import REPOSITORY_ROOT
+from src.agent.playbook import VERSION_CHOICES
 from src.runtime.live_preview import read_preview
 from src.utils.logging_utils import get_logger, redact_secrets
 
@@ -109,7 +110,7 @@ class EpisodeRunner:
             raise ValueError("Select a task from the catalog.")
         if isinstance(seed, bool) or int(seed) != seed or not 0 <= seed <= 2**32 - 1:
             raise ValueError("Seed must be an integer between 0 and 4294967295.")
-        if playbook not in ("v0", "v1", "v2", "v3"):
+        if playbook not in VERSION_CHOICES:
             raise ValueError("Select a playbook version.")
         with self.lock:
             if self.active is not None:

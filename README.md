@@ -27,119 +27,64 @@
 
 </div>
 
----
 
-<p align="center"><strong>Task:</strong> Put the small red yogurt in the red bowl.</p>
+RobotUse lets language-model agents select visual targets, choose grasps, and
+edit poses. Subagents keep local interaction histories and return outcomes to
+the main agent; the backend handles geometry, motion planning, and control.
 
-<p align="center">
-  <img src="assets/yogurt-in-bowl-comparison.gif" alt="Yogurt in bowl: Ours, CaP-X, and GaP (ORS), shown side by side at 2× speed. Completed clips hold their final frame and show Success or Failure." width="100%">
-</p>
+<p align="center"><img src="docs/media/robotuse-overview.png" alt="A main agent delegates visual action choices to subagents and a robot backend, with playbook refinement across episodes." width="100%"></p>
 
-<p align="center"><em>2× playback. ORS = Open Robot Skills.</em></p>
+This release runs episodes in **native RoboLab**. See the
+[project page](https://robotuse-team.github.io/) for demonstrations and results.
 
----
+## Quick start
 
-**RobotUse** is a robot agent harness that lets language-model agents specify and
-revise physical actions through visual target selection, grasp selection, and
-pose editing. Subagents keep detailed interactions in local contexts and return
-outcomes and unresolved constraints to the main agent, while the backend handles
-geometry, motion planning, and control.
-
-<p align="center">
-  <img src="docs/media/robotuse-overview.png" alt="RobotUse overview: a main agent delegates visual action choices to a subagent and robot backend; a separate loop refines the playbook across episodes." width="100%">
-</p>
-
-<p align="center"><em>Overview from the paper. Agents decide in language and on images; the backend plans and controls. The dashed loop shows playbook refinement across episodes.</em></p>
-
-## News
-
-- **2026-10-01:** Added the initial codebase, setup guide, and web UI.
-
-## Setup and execution
-
-Linux and an NVIDIA RTX GPU are required. The [setup guide](SETUP.md) covers
-virtual environments, pinned dependencies and checkpoints, GPU configuration,
-and LLM credentials.
-Review the [dependency and asset licenses](DEPENDENCIES.md#dependency-and-asset-licenses):
-Contact-GraspNet and some RoboLab assets have noncommercial restrictions.
+Use Linux x86_64 and an NVIDIA RTX GPU. Install Git LFS and uv, and review the
+[system requirements and dependency licenses](SETUP.md) before setup.
 
 ```bash
-git clone --recurse-submodules https://github.com/robotuse-team/RobotUse.git
+git clone https://github.com/robotuse-team/RobotUse.git
 cd RobotUse
 scripts/setup/sources.sh
-```
+scripts/setup/sam2.sh
+scripts/setup/cgn.sh
+scripts/setup/robolab.sh
+source scripts/lib/env.sh
 
-Install Git LFS first, as described in the setup guide. RoboLab, Contact-GraspNet,
-cuRobo, and official SAM2 stay at the commits pinned by this repository, under
-their tool or simulator's `third_party/` directory. The source setup downloads
-nested submodules and RoboLab LFS assets, then verifies revisions and recorded
-file hashes. It stops if existing sources have been modified. cuRobo remains
-disabled until explicitly configured and selected.
+# After accepting the Isaac Sim terms of use:
+export OMNI_KIT_ACCEPT_EULA=Y
+export ROBOT_LLM_PROVIDER=openrouter
+export OPENROUTER_API_KEY='your-key'
+export ROBOT_LLM_MODEL='your-provider-model-id'
 
-### Web UI
-
-Launch the UI with the OpenRouter preset:
-
-```bash
-scripts/run/ui_openrouter.sh
-```
-
-The preset defaults to `google/gemini-3.8-flash` and preserves your model and GPU
-settings. Opening the UI, browsing history, and checking configuration do not
-require an API key. For actual episodes, export `OPENROUTER_API_KEY` in the launch
-environment and complete the [runtime setup](SETUP.md#runtime-environment),
-including Isaac Sim terms acceptance. For another provider, configure your
-environment as described in [SETUP.md](SETUP.md) and use `scripts/run/ui.sh`.
-
-Open [http://127.0.0.1:7860](http://127.0.0.1:7860):
-
-1. Select **Task** and **Seed**, then choose `v0`, `v1`, `v2`, or `v3` from
-   **Playbook**. The default is `v3`.
-2. Choose **Configuration check** to validate settings without starting the simulator
-   or calling an LLM, or **Run episode** for actual simulator execution with LLM calls.
-3. Click **Start**. Front and wrist views refresh every second; **Activity** shows
-   the current operation. Images stay still while the simulator waits for an LLM.
-4. Use **Stop** to cancel the selected run. **Recent episodes** opens earlier runs;
-   **Refresh list** reloads that list.
-5. After completion, watch the recordings and check **Native verifier** for the task
-   outcome. **Process** reports execution status, which does not establish task success.
-
-The **History** tab works for both running episodes and earlier entries in
-**Recent episodes**. Use **Previous**, **Next**, or the **Turn** selector to inspect
-each agent's input, LLM output, and tool result. Click an image to enlarge it;
-**Recorded LLM input** expands the saved request messages. **Follow latest** tracks
-new turns, and turns off when you navigate manually. Missing records are shown
-as unavailable; viewing history does not call an LLM or alter the saved run.
-
-### Command line
-
-The CLI uses the same runner:
-
-```bash
 scripts/run/robolab.sh --task BananaInBowlTask --seed 0 \
-  --playbook-version v3 --output-dir runs/example --dry-run
+  --output-dir runs/example --dry-run
 ```
 
-Use `--playbook-version` to select `v0`, `v1`, `v2`, or `v3`.
-Omitting this option uses `v3`.
+Remove `--dry-run` to run the episode, using a new output directory each time.
+The default playbook is `v3`; select earlier versions with `--playbook-version`.
+Use `scripts/run/robolab.sh --help` for options.
 
-Remove `--dry-run` to execute an episode. Use a new output directory for each run.
-Run `scripts/run/robolab.sh --help` for the supported options. Execution stages
-and candidate selection policies are fixed internally.
-The default planner is native. cuRobo requires
-separate installation and calibration, and is enabled only when explicitly
-selected. For a live RoboLab check without an LLM, see the
-[setup guide](SETUP.md#native-check-without-an-llm).
+## Optional web UI
 
-## Files and results
+```bash
+scripts/setup/cpu.sh
+scripts/setup/ui.sh
+scripts/run/ui.sh
+```
 
-- [ARCHITECTURE.md](ARCHITECTURE.md): Module responsibilities and automatic tool registration.
-- [DEPENDENCIES.md](DEPENDENCIES.md): Third-party source provenance and licenses.
-- `src/utils/logging_utils.py`: Shared logging and JSON output, with a `runtime.log` for each run.
-- `assets/`: Generated robot input assets. `runs/`: Logs, videos, and outcomes for each run. Both are excluded from Git.
-- `tests/`: Regression tests. `pyproject.toml`: Python package, dependency, and test configuration.
+Open [http://127.0.0.1:7860](http://127.0.0.1:7860), select a task and seed, then
+run a configuration check or an episode. The UI shows live cameras, agent/tool
+history, recordings, and the native verifier. It uses the provider credentials
+from your launch environment.
 
-Use `verifier.json` to determine task success; process termination or an agent's
-narration alone is not sufficient. Native subtask `score` (0–1) is reported by
-default, separately from `reward`, and shown in the UI. Use `--no-task-score`
-to disable score reporting; unavailable scores are `null`, not zero.
+## Code and outputs
+
+- [Release layout](docs/public-release.md): core modules, optional components, and checks.
+- [Setup details](SETUP.md): isolated environments, GPUs, checkpoints, and native checks.
+- [Dependencies](DEPENDENCIES.md): pinned sources and upstream license terms.
+
+Each episode saves logs, videos, configuration, and `verifier.json` in its output
+directory. The native verifier determines task success; its subtask score is
+reported separately from process status and reward. Runtime environments,
+checkpoints, generated assets, and episode outputs stay outside Git.

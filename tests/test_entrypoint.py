@@ -27,7 +27,7 @@ def test_dry_run_preserves_default_optional_policies(tmp_path):
     assert args.sam_device == 'cuda:0' and args.max_restarts == 0
     assert record['decision_playbook'] == record['manipulation']['playbook']
     assert record['decision_playbook']['version'] == '3'
-    assert record['decision_playbook']['path'] == str(run_episode.PLAYBOOK_V3_PATH.resolve())
+    assert record['decision_playbook']['path'] == str(run_episode.POLICY_PATHS['3'].resolve())
     assert record['decision_playbook']['sha256'] == config.load_playbook().sha256
     assert not (tmp_path / 'live').exists()
 

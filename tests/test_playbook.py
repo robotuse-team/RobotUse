@@ -20,7 +20,7 @@ from test_orchestrator import Backend
 
 def test_default_configuration_loads_v3_playbook():
     config = RuntimeConfiguration()
-    assert config.load_playbook() == DecisionPlaybook.load(run_episode.PLAYBOOK_V3_PATH)
+    assert config.load_playbook() == DecisionPlaybook.load(run_episode.POLICY_PATHS['3'])
     assert config.playbook_version == '3'
     assert config.load_playbook().path.name == 'v3.md'
 
@@ -83,7 +83,7 @@ def test_runtime_persisted_playbook_matches_resolved_configuration(tmp_path, mon
 def test_invalid_playbook_fails_dry_run_before_startup(tmp_path, monkeypatch, content):
     path = tmp_path / 'invalid.md'
     path.write_text(content)
-    monkeypatch.setattr(run_episode, 'PLAYBOOK_V3_PATH', path)
+    monkeypatch.setitem(run_episode.POLICY_PATHS, '3', path)
     with pytest.raises(ValueError, match='decision playbook'):
         run_episode.resolve([*flags(tmp_path), '--dry-run'])
     assert not (tmp_path / 'live').exists()

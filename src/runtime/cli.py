@@ -18,11 +18,7 @@ from src.runtime.resolution import configuration_parser, resolve_configuration
 from src.runtime.episode import run_episode
 from src.utils.gpu import gpu_visibility, physical_gpu_index
 DEFAULT_CONFIG = REPOSITORY_ROOT / 'configs/robot.json'
-from src.agent.playbook import DEFAULT_VERSION as PLAYBOOK_VERSION
-from src.agent.playbook.v0 import PATH as PLAYBOOK_V0_PATH
-from src.agent.playbook.v1 import PATH as PLAYBOOK_V1_PATH
-from src.agent.playbook.v2 import PATH as PLAYBOOK_V2_PATH
-from src.agent.playbook.v3 import PATH as PLAYBOOK_V3_PATH
+from src.agent.playbook import DEFAULT_VERSION as PLAYBOOK_VERSION, POLICY_PATHS, VERSION_CHOICES
 EXECUTION_FEATURES = dict(planning_failure_stage=True,
     execution_pose_provenance=True, clicked_grasp_candidates=True,
     clicked_seed_yaw_deg=0., clicked_surface_tolerance_m=.01,
@@ -36,7 +32,7 @@ def resolve(argv=None):
     load_tool_registry()
     argv = list(sys.argv[1:] if argv is None else argv)
     parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
-    parser.add_argument('--playbook-version', choices=('v0', 'v1', 'v2', 'v3', '0', '1', '2', '3'),
+    parser.add_argument('--playbook-version', choices=(*VERSION_CHOICES, *POLICY_PATHS),
         default='v' + PLAYBOOK_VERSION,
         help=f'Role-scoped decision policy (default: v{PLAYBOOK_VERSION}).')
     parser.add_argument('--transit-planner', choices=('native', 'curobo'), default='native',
@@ -57,8 +53,7 @@ def resolve(argv=None):
     elif options.curobo_robot_file is not None or options.curobo_calibration_file is not None:
         raise ValueError('cuRobo configuration requires --transit-planner curobo')
     version = options.playbook_version.removeprefix('v')
-    path = {'0': PLAYBOOK_V0_PATH, '1': PLAYBOOK_V1_PATH,
-            '2': PLAYBOOK_V2_PATH, '3': PLAYBOOK_V3_PATH}[version]
+    path = POLICY_PATHS[version]
     resolved, record, dry, configuration = resolve_configuration(
         remaining, configuration_name='RobotUse', default_config=DEFAULT_CONFIG)
     configuration = replace(configuration, pose_preview_editor=True,
@@ -78,7 +73,6 @@ def resolve(argv=None):
         angular_cumulative_limit_deg=None, edited_rotation='arbitrary_finite_local_xyz',
         cgn_preflight_required=True, cgn_autostart=True,
         execution_features=dict(EXECUTION_FEATURES)))
-    import os
     gpu = gpu_visibility()
     record['physical_gpu'] = physical_gpu_index(gpu)
     record['cuda_visible_devices'] = gpu
@@ -95,7 +89,6 @@ def resolve(argv=None):
 def main(argv=None):
     resolved, record, dry, configuration = resolve(argv)
     if not dry:
-        import os
         from src.tools.grasp.service import ensure_cgn
         args = parse_args(resolved)
         if args.output_dir.exists():
@@ -110,8 +103,6 @@ def main(argv=None):
         if configuration.observed_transit_planner is not None:
             record['robotuse']['transit_planner']['runtime_dependencies'] = configuration.observed_transit_planner.validate_runtime()
     return execute(resolved, record, dry, configuration)
-
-
 
 
 def execute(resolved, record, dry, configuration):
