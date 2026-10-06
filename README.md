@@ -18,10 +18,12 @@
 <p><sup>*</sup> Equal contribution</p>
 
 <p>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/arXiv-Coming_soon-red">
-    <img src="https://img.shields.io/badge/arXiv-Coming_soon-red" alt="arXiv: Coming soon" title="Coming soon">
-  </picture>
+  <a href="https://arxiv.org/abs/2610.04929">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/arXiv-2610.04929-red">
+      <img src="https://img.shields.io/badge/arXiv-2610.04929-red" alt="arXiv: 2610.04929" title="Read the paper on arXiv">
+    </picture>
+  </a>
   <a href="https://robotuse-team.github.io/"><img src="https://img.shields.io/badge/Project_Page-RobotUse-green" alt="Project Page: RobotUse"></a>
 </p>
 
