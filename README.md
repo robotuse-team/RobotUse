@@ -24,6 +24,7 @@
       <img src="https://img.shields.io/badge/arXiv-2610.04929-red" alt="arXiv: 2610.04929" title="Read the paper on arXiv">
     </picture>
   </a>
+  <a href="https://huggingface.co/papers/2610.04929"><img src="https://img.shields.io/badge/Hugging_Face-2610.04929-yellow" alt="Hugging Face: 2610.04929" title="View the paper on Hugging Face"></a>
   <a href="https://robotuse-team.github.io/"><img src="https://img.shields.io/badge/Project_Page-RobotUse-green" alt="Project Page: RobotUse"></a>
 </p>
 
